@@ -1,0 +1,1590 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>東京駅8時発 47県庁レース</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root {
+      --bg: #000;
+      --panel: rgba(4, 10, 18, 0.78);
+      --line: rgba(120, 220, 255, 0.28);
+      --cyan: #00d4ff;
+      --green: #39ff14;
+      --yellow: #ffd400;
+      --orange: #ff8a00;
+      --red: #ff2d2d;
+      --purple: #a855f7;
+      --text: #f8fbff;
+      --muted: #9fb2c5;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: #000;
+      color: var(--text);
+      font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+    }
+
+    #app {
+      position: relative;
+      width: min(100vw, calc(100vh * 9 / 16));
+      height: min(100vh, calc(100vw * 16 / 9));
+      background: #000;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #map {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      z-index: 1;
+    }
+
+    .leaflet-container {
+      background: #000;
+      font: inherit;
+    }
+
+    .leaflet-control-container {
+      display: none;
+    }
+
+    #overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .intro-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 28px 22px 34px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.34) 45%, rgba(0,0,0,.86)),
+        radial-gradient(circle at 50% 44%, rgba(0,212,255,.18), transparent 36%);
+      opacity: 0;
+      transform: scale(1.02);
+      transition: opacity .22s ease, transform .22s ease;
+    }
+
+    .intro-overlay.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .intro-main {
+      align-self: center;
+      display: grid;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .intro-kicker {
+      justify-self: center;
+      padding: 5px 10px;
+      color: var(--yellow);
+      border: 1px solid rgba(255, 212, 0, .42);
+      background: rgba(0,0,0,.58);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+      box-shadow: 0 0 14px rgba(255, 212, 0, .18);
+    }
+
+    .intro-title {
+      font-size: 35px;
+      line-height: 1.02;
+      font-weight: 900;
+      text-shadow: 0 0 18px rgba(0, 212, 255, .95);
+    }
+
+    .intro-rules {
+      display: grid;
+      gap: 7px;
+      margin-top: 7px;
+    }
+
+    .intro-rule {
+      min-height: 56px;
+      display: grid;
+      grid-template-columns: 68px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      background: rgba(0,0,0,.68);
+      border: 1px solid rgba(0, 212, 255, .24);
+      box-shadow: 0 0 12px rgba(0, 212, 255, .10);
+      opacity: .22;
+      transform: translateY(10px);
+      transition: opacity .28s ease, transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+
+    .intro-rule.on {
+      opacity: 1;
+      transform: translateY(0);
+      border-color: rgba(0, 212, 255, .62);
+      box-shadow: 0 0 18px rgba(0, 212, 255, .24);
+    }
+
+    .intro-rule strong {
+      color: #fff;
+      font-size: 19px;
+      line-height: 1;
+      font-weight: 900;
+      text-align: left;
+    }
+
+    .intro-rule span {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.22;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .signal-stage {
+      align-self: end;
+      justify-self: center;
+      width: 290px;
+      height: 138px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.74);
+      box-shadow: 0 0 28px rgba(0,212,255,.18), inset 0 0 20px rgba(255,255,255,.05);
+    }
+
+    .signal-caption {
+      color: var(--yellow);
+      font-size: 25px;
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+      text-shadow: 0 0 16px rgba(255,212,0,.72);
+    }
+
+    .signal-lights {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .signal-light {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #111;
+      border: 1px solid rgba(255,255,255,.28);
+      box-shadow: inset 0 0 12px rgba(0,0,0,.8);
+    }
+
+    .signal-light.red.on {
+      background: #ff2d2d;
+      border-color: rgba(255,255,255,.68);
+      box-shadow: 0 0 18px rgba(255,45,45,.9), inset 0 0 10px rgba(255,255,255,.28);
+    }
+
+    .signal-light.green.on {
+      background: #39ff14;
+      border-color: rgba(255,255,255,.76);
+      box-shadow: 0 0 20px rgba(57,255,20,.95), inset 0 0 10px rgba(255,255,255,.32);
+    }
+
+    .top-hud {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 10px;
+      z-index: 20;
+    }
+
+    .title {
+      min-width: 0;
+      padding: 10px 12px;
+      border: 1px solid rgba(0, 212, 255, 0.26);
+      background: linear-gradient(90deg, rgba(0,0,0,.76), rgba(7,18,34,.58));
+      box-shadow: 0 0 16px rgba(0, 212, 255, 0.12);
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-shadow: 0 0 12px rgba(0, 212, 255, .9);
+    }
+
+    .title .sub {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .clock {
+      width: 96px;
+      padding: 10px 9px;
+      border: 1px solid rgba(255, 212, 0, 0.35);
+      background: rgba(0,0,0,.78);
+      text-align: center;
+      box-shadow: 0 0 14px rgba(255, 212, 0, 0.12);
+    }
+
+    .clock .label {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.1;
+    }
+
+    .clock .time {
+      margin-top: 3px;
+      color: var(--yellow);
+      font-size: 25px;
+      font-weight: 900;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 10px rgba(255, 212, 0, .75);
+    }
+
+    .metrics {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 106px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      z-index: 20;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 7px 7px 8px;
+      background: rgba(0,0,0,.64);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric.arrived strong { color: var(--green); }
+    .metric.air strong { color: var(--purple); }
+    .metric.wait strong { color: var(--orange); }
+    .metric.remaining strong { color: var(--red); }
+
+    .legend {
+      position: absolute;
+      left: 14px;
+      top: 160px;
+      z-index: 20;
+      display: grid;
+      gap: 4px;
+      padding: 7px 8px;
+      background: rgba(0, 0, 0, .62);
+      border: 1px solid rgba(255, 255, 255, .12);
+      box-shadow: 0 0 12px rgba(0, 0, 0, .5);
+    }
+
+    .legend-title {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .legend-row {
+      display: grid;
+      grid-template-columns: 9px auto;
+      align-items: center;
+      gap: 5px;
+      color: var(--text);
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .legend-swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      box-shadow: 0 0 7px currentColor;
+    }
+
+    .event-feed {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 18px;
+      display: grid;
+      gap: 6px;
+      z-index: 20;
+    }
+
+    .event-row {
+      min-height: 44px;
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 9px;
+      background: rgba(0, 0, 0, .70);
+      border: 1px solid rgba(0, 212, 255, .18);
+      box-shadow: 0 0 10px rgba(0, 212, 255, .10);
+    }
+
+    .event-row .pref {
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .event-row .state {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .event-row .state small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .impact {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: 38%;
+      z-index: 30;
+      opacity: 0;
+      transform: translateY(12px) scale(.98);
+      transition: opacity .35s ease, transform .35s ease;
+      padding: 18px 14px;
+      background: rgba(0,0,0,.82);
+      border: 1px solid rgba(255,45,45,.45);
+      text-align: center;
+      box-shadow: 0 0 24px rgba(255,45,45,.25);
+    }
+
+    .impact.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .impact .main {
+      font-size: 32px;
+      line-height: 1.06;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 16px rgba(255,45,45,.9);
+    }
+
+    .impact .cta {
+      margin-top: 9px;
+      color: var(--yellow);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .slow-reveal {
+      margin-top: 12px;
+      display: grid;
+      gap: 5px;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .slow-reveal div {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 8px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .slow-reveal span:last-child {
+      color: var(--yellow);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .marker-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--cyan);
+      border: 1px solid rgba(255,255,255,.8);
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    .particle {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: 0 0 8px currentColor, 0 0 14px currentColor;
+    }
+
+    .particle.air { color: var(--purple); }
+    .particle.shinkansen { color: var(--cyan); }
+    .particle.rail { color: #6ee7ff; }
+    .particle.wait { color: var(--orange); animation: pulse 1s ease-in-out infinite; }
+    .particle.arrived { color: var(--green); }
+    .particle.slowest {
+      width: 8px;
+      height: 8px;
+      border-width: 2px;
+      color: var(--red);
+      box-shadow: 0 0 12px currentColor, 0 0 24px currentColor, 0 0 40px rgba(255,45,45,.62);
+    }
+
+    .leaflet-marker-icon.is-arrived .particle,
+    .leaflet-marker-icon.is-arrived .pref-label {
+      opacity: 0;
+    }
+
+    .leaflet-marker-icon.is-finalist .particle,
+    .leaflet-marker-icon.is-arrived.is-finalist .particle {
+      width: 9px;
+      height: 9px;
+      opacity: 1;
+      color: var(--red);
+      border-width: 2px;
+      animation: finalPulse .7s ease-in-out infinite;
+      box-shadow: 0 0 14px currentColor, 0 0 28px currentColor, 0 0 46px rgba(255,45,45,.66);
+    }
+
+    .leaflet-marker-icon.is-finalist .pref-label,
+    .leaflet-marker-icon.is-arrived.is-finalist .pref-label {
+      opacity: 1;
+      color: #fff;
+      background: linear-gradient(90deg, rgba(255,45,45,.92), rgba(0,0,0,.72));
+      border-left-color: var(--red);
+      box-shadow: 0 0 18px rgba(255,45,45,.45);
+    }
+
+    .pref-label {
+      margin-left: 7px;
+      margin-top: -5px;
+      min-width: 42px;
+      padding: 2px 6px 3px;
+      color: rgba(255,255,255,.94);
+      background: linear-gradient(90deg, rgba(0,0,0,.74), rgba(5,14,24,.54));
+      border-left: 2px solid currentColor;
+      border-top: 1px solid rgba(255,255,255,.16);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      border-right: 1px solid rgba(255,255,255,.08);
+      font-size: 9px;
+      font-weight: 800;
+      line-height: 1.05;
+      white-space: nowrap;
+      text-shadow: 0 0 8px #000;
+    }
+
+    .route-line {
+      filter: drop-shadow(0 0 5px currentColor);
+    }
+
+    .rail-bg-line {
+      filter: drop-shadow(0 0 2px currentColor);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(.85); opacity: .75; }
+      50% { transform: scale(1.35); opacity: 1; }
+    }
+
+    @keyframes finalPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.55); }
+    }
+
+    @media (max-height: 720px) {
+      .title h1 { font-size: 22px; }
+      .metrics { top: 96px; }
+      .legend { top: 148px; }
+      .event-feed { bottom: 14px; }
+      .event-row { min-height: 38px; }
+      .intro-title { font-size: 31px; }
+      .signal-stage { height: 126px; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app" aria-label="東京駅8時発 47都道府県庁到達レース">
+    <div id="map"></div>
+    <section class="intro-overlay show" id="introOverlay" aria-label="レース説明">
+      <div class="intro-main">
+        <div class="intro-kicker">47 PREFECTURE OFFICE GRAND PRIX</div>
+        <div class="intro-title">東京駅8時発<br>県庁到着レース</div>
+        <div class="intro-rules">
+          <div class="intro-rule"><strong>START</strong><span>東京駅を8:00に同時出発</span></div>
+          <div class="intro-rule"><strong>ROUTE</strong><span>新幹線・空路・在来線を自動選択</span></div>
+          <div class="intro-rule"><strong>LIVE</strong><span>NAVITIME経路shapeに沿って移動</span></div>
+          <div class="intro-rule"><strong>GOAL</strong><span>最後の県庁を全国地図で強調</span></div>
+        </div>
+      </div>
+      <div class="signal-stage" id="signalStage">
+        <div class="signal-caption" id="countdown">RULES</div>
+        <div class="signal-lights" aria-hidden="true">
+          <span class="signal-light red" id="signal-0"></span>
+          <span class="signal-light red" id="signal-1"></span>
+          <span class="signal-light red" id="signal-2"></span>
+          <span class="signal-light red" id="signal-3"></span>
+          <span class="signal-light green" id="signal-4"></span>
+        </div>
+      </div>
+    </section>
+    <div id="overlay">
+      <section class="top-hud">
+        <div class="title">
+          <h1>東京駅8時発<br>47県庁レース</h1>
+          <div class="sub">DEMO DATA / OSM rail background + internal timing model</div>
+        </div>
+        <div class="clock">
+          <div class="label">SIM TIME</div>
+          <div class="time" id="clock">08:00</div>
+        </div>
+      </section>
+
+      <section class="metrics">
+        <div class="metric arrived"><span>到着済み</span><strong id="arrived">0</strong></div>
+        <div class="metric air"><span>飛行中</span><strong id="airborne">0</strong></div>
+        <div class="metric wait"><span>待機中</span><strong id="waiting">0</strong></div>
+        <div class="metric remaining"><span>未着</span><strong id="remaining">47</strong></div>
+      </section>
+
+      <section class="legend" aria-label="到着時間の色分け">
+        <div class="legend-title">ARRIVAL COLOR</div>
+        <div class="legend-row"><span class="legend-swatch" style="color:#00d4ff;background:#00d4ff"></span><span>-3h</span></div>
+        <div class="legend-row"><span class="legend-swatch" style="color:#ffd400;background:#ffd400"></span><span>3-6h</span></div>
+        <div class="legend-row"><span class="legend-swatch" style="color:#ff2d2d;background:#ff2d2d"></span><span>6-9h</span></div>
+        <div class="legend-row"><span class="legend-swatch" style="color:#777;background:#050505"></span><span>9h+</span></div>
+      </section>
+
+      <section class="event-feed" id="eventFeed"></section>
+
+      <section class="impact" id="impact">
+        <div class="main">最後に着く県庁は<br>距離より交通網で決まる</div>
+        <div class="cta">あなたの県庁、何時に着く？</div>
+        <div class="slow-reveal" id="slowReveal"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const DEMO_URL = "./data/demo_prefecture_routes.json";
+    const PREFECTURES_URL = "./data/prefectures-lite.geojson";
+    const RAILWAY_BACKGROUND_URL = "./data/railway-background.geojson";
+    const PARAMS = new URLSearchParams(location.search);
+    const USE_SLOW5_DEMO = PARAMS.get("demo") === "slow5";
+    const USE_LIVE_NAVITIME = PARAMS.get("live") === "1";
+    const ONLY_LIVE_NAVITIME = (USE_LIVE_NAVITIME || USE_SLOW5_DEMO) && PARAMS.get("all") !== "1";
+    const LIVE_TARGETS = PARAMS.get("targets") || "";
+    const LIVE_NAVITIME_URL = `${location.protocol}//${location.hostname}:8890/api/navitime/sample${LIVE_TARGETS ? `?targets=${encodeURIComponent(LIVE_TARGETS)}` : ""}`;
+    const FEATURED_PREFECTURES = ["沖縄県", "和歌山県", "島根県", "富山県"];
+    const START_MIN = 8 * 60;
+    const END_MIN = 15 * 60 + 30;
+    const INTRO_MS = 6000;
+    const INTRO_RULES_MS = 3000;
+    const RACE_LOOP_MS = 30000;
+    const LOOP_MS = INTRO_MS + RACE_LOOP_MS;
+    const INTRO_END_MIN = 8 * 60 + 30;
+    const INTRO_SLOW_MS = ((INTRO_END_MIN - START_MIN) / (END_MIN - START_MIN)) * RACE_LOOP_MS * 3;
+
+    const state = {
+      data: null,
+      map: null,
+      pointIndex: new Map(),
+      pathIndex: new Map(),
+      legPathCache: new WeakMap(),
+      pathMeasureCache: new WeakMap(),
+      particles: [],
+      routeLayers: [],
+      railwayBackgroundLayer: null,
+      liveRouteLayer: null,
+      trailLayer: null,
+      destinationLayer: null,
+      arrivalFills: new Map(),
+      prefectureLayer: null,
+      visiblePrefectures: new Set(),
+      livePayload: null,
+      liveError: null,
+      lastArrivalMin: END_MIN,
+      lastArrivalElapsed: LOOP_MS,
+      slowestPlace: null,
+      impactElapsed: LOOP_MS,
+      cameraMode: "tokyo",
+      startTs: performance.now(),
+      zoomedOut: false
+    };
+
+    const colors = {
+      shinkansen: "#00d4ff",
+      rail: "#6ee7ff",
+      airport_access: "#ffd400",
+      air: "#a855f7",
+      wait: "#ff8a00",
+      local: "#39ff14",
+      arrived: "#39ff14",
+      late: "#ff2d2d"
+    };
+
+    init();
+
+    async function init() {
+      const [data, prefectures, railwayBackground] = await Promise.all([
+        fetch(DEMO_URL).then(r => r.json()),
+        fetch(PREFECTURES_URL).then(r => r.json()),
+        fetch(RAILWAY_BACKGROUND_URL).then(r => r.json())
+      ]);
+      let workingData = data;
+      if (USE_SLOW5_DEMO) {
+        workingData = buildSlow5Demo(data);
+        document.querySelector(".title .sub").textContent = "DEMO SLOW 5 / API OFF";
+        document.querySelector(".intro-kicker").textContent = "API-OFF SLOW PREFECTURE GRAND PRIX";
+      } else if (USE_LIVE_NAVITIME) {
+        try {
+          const livePayload = await fetch(LIVE_NAVITIME_URL).then(r => r.json());
+          if (livePayload.error) throw new Error(livePayload.error);
+          workingData = mergeLiveNavitime(data, livePayload);
+          state.livePayload = livePayload;
+          const liveLabel = `${(livePayload.places || [livePayload.place]).filter(Boolean).length}県 LIVE NAVITIME`;
+          document.querySelector(".title .sub").textContent = ONLY_LIVE_NAVITIME ? `${liveLabel} / ONLY` : `${liveLabel} + DEMO DATA`;
+          document.querySelector(".intro-kicker").textContent = ONLY_LIVE_NAVITIME ? "LIVE NAVITIME SAMPLE GRAND PRIX" : "47 PREFECTURE OFFICE GRAND PRIX";
+        } catch (error) {
+          state.liveError = error.message;
+          if (ONLY_LIVE_NAVITIME) workingData = liveFailureData(data, error);
+          document.querySelector(".title .sub").textContent = ONLY_LIVE_NAVITIME ? "LIVE NAVITIME FAILED / EMPTY" : "LIVE NAVITIME FAILED / DEMO FALLBACK";
+        }
+      }
+      state.data = workingData;
+      state.visiblePrefectures = new Set(workingData.places.map(place => place.prefecture));
+      state.lastArrivalMin = Math.max(...workingData.places.map(place => parseTime(place.arrival_label)));
+      state.lastArrivalElapsed = elapsedForSimTime(state.lastArrivalMin);
+      state.slowestPlace = [...workingData.places].sort((a, b) => parseTime(b.arrival_label) - parseTime(a.arrival_label))[0] || null;
+      state.impactElapsed = state.lastArrivalElapsed + 1000;
+      buildIndexes(workingData);
+      setupMap(workingData);
+      drawPrefectures(prefectures);
+      drawRailwayBackground(railwayBackground);
+      drawLiveRouteGeometry();
+      drawStaticRoutes(workingData);
+      drawDestinations(workingData);
+      setupParticles(workingData);
+      drawSlowReveal(workingData);
+      requestAnimationFrame(tick);
+    }
+
+    function mergeLiveNavitime(data, livePayload) {
+      const clone = structuredClone(data);
+      clone.visual_points = { ...(clone.visual_points || {}), ...(livePayload.visual_points || {}) };
+      clone.visual_paths = { ...(clone.visual_paths || {}), ...(livePayload.visual_paths || {}) };
+      const livePlaces = (livePayload.places || [livePayload.place]).filter(Boolean);
+      const liveByPrefecture = new Map(livePlaces.map(place => [place.prefecture, place]));
+      clone.places = ONLY_LIVE_NAVITIME
+        ? livePlaces
+        : clone.places.map(place => liveByPrefecture.get(place.prefecture) || place);
+      clone.assumptions = {
+        ...(clone.assumptions || {}),
+        live_navitime: "NAVITIME live responseをメモリ上で変換。ファイル保存なし。"
+      };
+      return clone;
+    }
+
+    function buildSlow5Demo(data) {
+      const clone = structuredClone(data);
+      const targets = new Set(["沖縄県", "和歌山県", "島根県", "富山県", "秋田県"]);
+      clone.places = clone.places.filter(place => targets.has(place.prefecture));
+      clone.visual_points = {
+        ...(clone.visual_points || {}),
+        izumo_airport: [35.4149, 132.889],
+        matsue: [35.4646, 133.0633],
+        wakayamashi: [34.2363, 135.1665],
+        izumisano: [34.4108, 135.3162],
+        kenchomae_naha: [26.2124, 127.6792]
+      };
+      clone.visual_paths = {
+        ...(clone.visual_paths || {}),
+        demo_kix_wakayama: ["kansai", "izumisano", "wakayamashi"],
+        demo_izumo_matsue: ["izumo_airport", "matsue"],
+        demo_naha_pref: ["naha", "kenchomae_naha"]
+      };
+      const byPref = new Map(clone.places.map(place => [place.prefecture, place]));
+      patchDemoPlace(byPref.get("沖縄県"), {
+        duration_minutes: 276,
+        arrival_label: "12:36",
+        route_type: "air",
+        legs: [
+          { type: "rail", mode: "local_train", line: "JR京浜東北線", from: "東京", to: "浜松町", dep: "08:07", arr: "08:11", visual_path_id: "jr_keihin_tohoku_tokyo_hamamatsucho" },
+          { type: "wait", at: "浜松町", dep: "08:11", arr: "08:21" },
+          { type: "rail", mode: "airport_access", line: "東京モノレール空港快速", from: "浜松町", to: "羽田空港", dep: "08:21", arr: "08:37", visual_path_id: "tokyo_monorail_hamamatsucho_haneda" },
+          { type: "wait", at: "羽田空港", dep: "08:37", arr: "09:33" },
+          { type: "air", line: "羽田→那覇", from: "羽田空港", to: "那覇空港", dep: "09:33", arr: "12:03", visual_path_id: "air_hnd_oka" },
+          { type: "rail", mode: "local_train", line: "ゆいレール", from: "那覇空港", to: "県庁前", dep: "12:17", arr: "12:29", visual_path_id: "demo_naha_pref" },
+          { type: "walk", line: "徒歩", from: "県庁前", to: "沖縄県庁", dep: "12:29", arr: "12:36" }
+        ]
+      });
+      patchDemoPlace(byPref.get("和歌山県"), {
+        duration_minutes: 284,
+        arrival_label: "12:44",
+        route_type: "air",
+        legs: [
+          { type: "rail", mode: "local_train", line: "JR京浜東北線", from: "東京", to: "浜松町", dep: "08:07", arr: "08:11", visual_path_id: "jr_keihin_tohoku_tokyo_hamamatsucho" },
+          { type: "wait", at: "浜松町", dep: "08:11", arr: "08:21" },
+          { type: "rail", mode: "airport_access", line: "東京モノレール空港快速", from: "浜松町", to: "羽田空港", dep: "08:21", arr: "08:37", visual_path_id: "tokyo_monorail_hamamatsucho_haneda" },
+          { type: "wait", at: "羽田空港", dep: "08:37", arr: "09:40" },
+          { type: "air", line: "羽田→関西", from: "羽田空港", to: "関西空港", dep: "09:40", arr: "10:55", visual_path_id: "air_hnd_kix" },
+          { type: "rail", mode: "airport_access", line: "南海本線空港急行", from: "関西空港", to: "泉佐野", dep: "11:26", arr: "11:35", visual_path_id: "demo_kix_wakayama" },
+          { type: "rail", mode: "limited_express", line: "南海特急サザン", from: "泉佐野", to: "和歌山市", dep: "11:53", arr: "12:20", visual_path_id: "demo_kix_wakayama" },
+          { type: "walk", line: "徒歩", from: "和歌山市", to: "和歌山県庁", dep: "12:20", arr: "12:44" }
+        ]
+      });
+      patchDemoPlace(byPref.get("島根県"), {
+        duration_minutes: 310,
+        arrival_label: "13:10",
+        route_type: "air",
+        legs: [
+          { type: "rail", mode: "local_train", line: "JR京浜東北線", from: "東京", to: "浜松町", dep: "08:07", arr: "08:11", visual_path_id: "jr_keihin_tohoku_tokyo_hamamatsucho" },
+          { type: "wait", at: "浜松町", dep: "08:11", arr: "08:21" },
+          { type: "rail", mode: "airport_access", line: "東京モノレール空港快速", from: "浜松町", to: "羽田空港", dep: "08:21", arr: "08:37", visual_path_id: "tokyo_monorail_hamamatsucho_haneda" },
+          { type: "wait", at: "羽田空港", dep: "08:37", arr: "10:22" },
+          { type: "air", line: "羽田→出雲", from: "羽田空港", to: "出雲空港", dep: "10:22", arr: "11:42", visual_path_id: "air_hnd_izo" },
+          { type: "wait", at: "出雲空港", dep: "11:42", arr: "12:20" },
+          { type: "rail", mode: "shuttle_bus", line: "連絡バス", from: "出雲空港", to: "松江", dep: "12:20", arr: "12:56", visual_path_id: "demo_izumo_matsue" },
+          { type: "walk", line: "徒歩", from: "松江", to: "島根県庁", dep: "12:56", arr: "13:10" }
+        ]
+      });
+      patchDemoPlace(byPref.get("富山県"), {
+        duration_minutes: 176,
+        arrival_label: "10:56",
+        route_type: "shinkansen",
+        legs: [
+          { type: "shinkansen", mode: "superexpress_train", line: "かがやき", from: "東京", to: "富山", dep: "08:34", arr: "10:42", visual_path_id: "shinkansen_hokuriku_tokyo_kanazawa" },
+          { type: "walk", line: "徒歩", from: "富山", to: "富山県庁", dep: "10:42", arr: "10:56" }
+        ]
+      });
+      patchDemoPlace(byPref.get("秋田県"), {
+        duration_minutes: 299,
+        arrival_label: "12:59",
+        route_type: "shinkansen",
+        legs: [
+          { type: "shinkansen", mode: "superexpress_train", line: "こまち", from: "東京", to: "秋田", dep: "08:34", arr: "12:22", visual_path_id: "shinkansen_tohoku_tokyo_shinaomori" },
+          { type: "walk", line: "徒歩", from: "秋田", to: "秋田県庁", dep: "12:22", arr: "12:59" }
+        ]
+      });
+      clone.assumptions = {
+        ...(clone.assumptions || {}),
+        slow5_demo: "APIを使わない見た目調整用の手作り5県デモ。LIVEレスポンスの保存ではない。"
+      };
+      return clone;
+    }
+
+    function patchDemoPlace(place, patch) {
+      if (!place) return;
+      Object.assign(place, patch);
+      place.status_events = (patch.legs || []).map(leg => ({
+        time: leg.dep,
+        label: `${place.prefecture} ${leg.line || leg.at || "移動"}`,
+        priority: leg.type === "air" ? 4 : leg.type === "shinkansen" ? 3 : 2
+      }));
+      place.status_events.push({ time: place.arrival_label, label: `${place.name} 着弾`, priority: 3 });
+    }
+
+    function liveFailureData(data, error) {
+      return {
+        ...structuredClone(data),
+        places: [],
+        visual_points: {},
+        visual_paths: {},
+        assumptions: {
+          live_navitime_error: error.message
+        }
+      };
+    }
+
+    function setupMap(data) {
+      state.map = L.map("map", {
+        preferCanvas: true,
+        zoomControl: false,
+        attributionControl: false,
+        dragging: false,
+        touchZoom: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false
+      }).setView([35.64, 139.74], 11);
+
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+        maxZoom: 18,
+        opacity: 0.82
+      }).addTo(state.map);
+
+      const tokyo = data.origin;
+      L.circleMarker([tokyo.lat, tokyo.lng], {
+        radius: 7,
+        color: "#fff",
+        weight: 2,
+        fillColor: "#00d4ff",
+        fillOpacity: 1
+      }).addTo(state.map);
+      state.trailLayer = L.layerGroup().addTo(state.map);
+    }
+
+    function drawPrefectures(prefectures) {
+      state.prefectureLayer = L.geoJSON(prefectures, {
+        interactive: false,
+        filter: feature => {
+          const name = feature.properties && feature.properties.P;
+          return !name || state.visiblePrefectures.has(name);
+        },
+        style: feature => ({
+          color: "rgba(255,255,255,.07)",
+          weight: 0.35,
+          fillColor: "#111827",
+          fillOpacity: 0
+        }),
+        onEachFeature: (feature, layer) => {
+          const name = feature.properties && feature.properties.P;
+          if (name) state.arrivalFills.set(name, layer);
+        }
+      }).addTo(state.map);
+    }
+
+    function drawRailwayBackground(railways) {
+      state.railwayBackgroundLayer = L.geoJSON(railways, {
+        interactive: false,
+        style: feature => {
+          const shinkansen = feature.properties && feature.properties.kind === "shinkansen";
+          return {
+            color: shinkansen ? "rgba(0,212,255,.48)" : "rgba(255,212,0,.52)",
+            weight: shinkansen ? 2.25 : 1.65,
+            opacity: shinkansen ? 0.68 : 0.56,
+            lineCap: "round",
+            lineJoin: "round",
+            className: "rail-bg-line"
+          };
+        }
+      }).addTo(state.map);
+    }
+
+    function drawLiveRouteGeometry() {
+      if (!state.livePayload || !state.livePayload.route_geojson) return;
+      if ((state.data.places || []).length > 12) return;
+      state.liveRouteLayer = L.geoJSON(state.livePayload.route_geojson, {
+        interactive: false,
+        filter: feature => !isAirRouteFeature(feature) && !isCoarseGroundRouteFeature(feature),
+        style: feature => {
+          const props = feature.properties || {};
+          const inline = props.inline || {};
+          const isTransport = props.ways === "transport";
+          return {
+            color: isTransport ? (inline.color || "#39ff14") : "rgba(255,255,255,.75)",
+            weight: isTransport ? 3.2 : 1.2,
+            opacity: isTransport ? 0.82 : 0.38,
+            lineCap: "round",
+            lineJoin: "round",
+            className: "route-line"
+          };
+        }
+      }).addTo(state.map);
+    }
+
+    function isAirRouteFeature(feature) {
+      const props = feature.properties || {};
+      const transportType = String(props.transport_type || props.transport || "").toLowerCase();
+      if (transportType.includes("air") || transportType.includes("flight") || transportType.includes("plane")) return true;
+      const coords = feature.geometry && feature.geometry.coordinates;
+      if (!coords || feature.geometry.type !== "LineString" || coords.length < 2) return false;
+      const a = { lng: coords[0][0], lat: coords[0][1] };
+      const b = { lng: coords[coords.length - 1][0], lat: coords[coords.length - 1][1] };
+      const looksLikeFlight = (props.ways === "transport") && distance(a, b) > 4.5 && coords.length <= 8;
+      return looksLikeFlight;
+    }
+
+    function isCoarseGroundRouteFeature(feature) {
+      const props = feature.properties || {};
+      const coords = feature.geometry && feature.geometry.coordinates;
+      if (!coords || feature.geometry.type !== "LineString" || coords.length < 2) return false;
+      const a = { lng: coords[0][0], lat: coords[0][1] };
+      const b = { lng: coords[coords.length - 1][0], lat: coords[coords.length - 1][1] };
+      return props.prefecture === "島根県"
+        && props.ways === "transport"
+        && coords.length <= 3
+        && distance(a, b) > 0.08;
+    }
+
+    function buildIndexes(data) {
+      Object.entries(data.visual_points || {}).forEach(([id, pair]) => {
+        state.pointIndex.set(id, { lat: pair[0], lng: pair[1], name: id });
+      });
+      state.pointIndex.set("東京駅", { lat: data.origin.lat, lng: data.origin.lng, name: "東京駅" });
+      state.pointIndex.set("start", { lat: data.origin.lat, lng: data.origin.lng, name: "start" });
+
+      data.places.forEach(place => {
+        state.pointIndex.set(place.prefecture, { lat: place.lat, lng: place.lng, name: place.prefecture });
+        state.pointIndex.set(place.name, { lat: place.lat, lng: place.lng, name: place.name });
+      });
+
+      Object.entries(data.visual_paths || {}).forEach(([id, pointIds]) => {
+        const pts = pointIds.map(pid => state.pointIndex.get(pid)).filter(Boolean);
+        state.pathIndex.set(id, pts);
+      });
+    }
+
+    function drawStaticRoutes(data) {
+      const drawn = new Set();
+      data.places.forEach(place => {
+        place.legs.forEach(leg => {
+          if (!leg.visual_path_id || drawn.has(leg.visual_path_id)) return;
+          const pts = state.pathIndex.get(leg.visual_path_id);
+          if (!pts || pts.length < 2) return;
+          drawn.add(leg.visual_path_id);
+          const isAir = leg.type === "air";
+          const line = isAir ? makeArc(pts[0], pts[pts.length - 1], 28) : pts;
+          state.pathIndex.set(leg.visual_path_id + ":draw", line);
+        });
+      });
+    }
+
+    function drawDestinations(data) {
+      state.destinationLayer = L.layerGroup().addTo(state.map);
+      data.places.forEach(place => {
+        L.circleMarker([place.lat, place.lng], {
+          radius: 3,
+          color: "rgba(255,255,255,.55)",
+          weight: 1,
+          fillColor: "#172235",
+          fillOpacity: .88
+        }).addTo(state.destinationLayer);
+      });
+    }
+
+    function setupParticles(data) {
+      data.places.forEach(place => {
+        const icon = L.divIcon({
+          className: "",
+          html: `<div class="particle rail" id="particle-${place.prefecture}"></div><div class="pref-label">${place.prefecture}</div>`,
+          iconSize: [76, 16],
+          iconAnchor: [3, 3]
+        });
+        const marker = L.marker([data.origin.lat, data.origin.lng], { icon, interactive: false }).addTo(state.map);
+        state.particles.push({ place, marker, currentClass: "rail" });
+      });
+    }
+
+    function tick(now) {
+      const loopElapsed = (now - state.startTs) % LOOP_MS;
+      const introActive = loopElapsed < INTRO_MS;
+      const elapsed = introActive ? 0 : loopElapsed - INTRO_MS;
+      const simMin = introActive ? START_MIN : simTimeForElapsed(elapsed);
+      const progress = (simMin - START_MIN) / (END_MIN - START_MIN);
+      const clockText = toClock(simMin);
+      document.getElementById("clock").textContent = clockText;
+      updateIntro(loopElapsed, introActive);
+      updateCamera(introActive, elapsed, simMin, now);
+
+      const counts = { arrived: 0, air: 0, wait: 0, remaining: 0 };
+      const highlights = [];
+      state.trailLayer.clearLayers();
+
+      state.particles.forEach(item => {
+        const pos = positionFor(item.place, simMin);
+        item.marker.setLatLng([pos.lat, pos.lng]);
+        setParticleClass(item, pos.className);
+        setFinalistHighlight(item, simMin);
+        if (pos.className === "arrived") counts.arrived++;
+        else counts.remaining++;
+        if (pos.className === "air") counts.air++;
+        if (pos.className === "wait") counts.wait++;
+        updateArrivalFill(item.place, pos.className, simMin);
+        drawMovementTrail(item, pos);
+        const event = activeEvent(item.place, simMin);
+        if (event) highlights.push({ place: item.place, event });
+      });
+
+      document.getElementById("arrived").textContent = counts.arrived;
+      document.getElementById("airborne").textContent = counts.air;
+      document.getElementById("waiting").textContent = counts.wait;
+      document.getElementById("remaining").textContent = counts.remaining;
+      renderEvents(highlights, simMin);
+
+      document.getElementById("impact").classList.toggle("show", counts.remaining === 0 && elapsed >= state.impactElapsed);
+      requestAnimationFrame(tick);
+    }
+
+    function updateCamera(introActive, elapsed, simMin, now) {
+      if (introActive || elapsed < 600 || simMin < INTRO_END_MIN) {
+        setCameraMode("tokyo", [35.64, 139.74], 11, introActive ? 0 : .8);
+        return;
+      }
+      setCameraMode("national", [36.8, 137.5], 5, 2.2);
+    }
+
+    function setCameraMode(mode, center, zoom, duration) {
+      if (state.cameraMode === mode) return;
+      state.cameraMode = mode;
+      if (duration > 0) {
+        state.map.flyTo(center, zoom, { duration, easeLinearity: .25 });
+      } else {
+        state.map.setView(center, zoom);
+      }
+      state.zoomedOut = mode === "national" || mode === "back-national";
+    }
+
+    function updateIntro(loopElapsed, introActive) {
+      const intro = document.getElementById("introOverlay");
+      const countdown = document.getElementById("countdown");
+      const rules = [...document.querySelectorAll(".intro-rule")];
+      const lights = [...document.querySelectorAll(".signal-light")];
+      intro.classList.toggle("show", introActive);
+      if (!introActive) return;
+      rules.forEach((rule, index) => {
+        rule.classList.toggle("on", loopElapsed >= 450 + index * 650);
+      });
+      lights.forEach(light => light.classList.remove("on"));
+      if (loopElapsed < INTRO_RULES_MS) {
+        countdown.textContent = "RULES";
+        return;
+      }
+      const countdownElapsed = loopElapsed - INTRO_RULES_MS;
+      const count = Math.max(1, 3 - Math.floor(countdownElapsed / 1000));
+      countdown.textContent = count === 1 && countdownElapsed > 2500 ? "GO" : count;
+      const redCount = Math.min(4, Math.floor(countdownElapsed / 700) + 1);
+      lights.slice(0, redCount).forEach(light => light.classList.add("on"));
+      if (countdownElapsed > 2500) {
+        lights.slice(0, 4).forEach(light => light.classList.remove("on"));
+        lights[4].classList.add("on");
+      }
+    }
+
+    function simTimeForElapsed(elapsed) {
+      if (elapsed <= INTRO_SLOW_MS) {
+        return START_MIN + (elapsed / INTRO_SLOW_MS) * (INTRO_END_MIN - START_MIN);
+      }
+      const restElapsed = elapsed - INTRO_SLOW_MS;
+      const restDuration = RACE_LOOP_MS - INTRO_SLOW_MS;
+      const restSim = END_MIN - INTRO_END_MIN;
+      return INTRO_END_MIN + (restElapsed / restDuration) * restSim;
+    }
+
+    function elapsedForSimTime(simMin) {
+      if (simMin <= INTRO_END_MIN) {
+        return ((simMin - START_MIN) / (INTRO_END_MIN - START_MIN)) * INTRO_SLOW_MS;
+      }
+      const restSim = END_MIN - INTRO_END_MIN;
+      const restDuration = RACE_LOOP_MS - INTRO_SLOW_MS;
+      return INTRO_SLOW_MS + ((simMin - INTRO_END_MIN) / restSim) * restDuration;
+    }
+
+    function positionFor(place, simMin) {
+      const legs = place.legs || [];
+      const finalArr = parseTime(place.arrival_label);
+      if (simMin >= finalArr) {
+        return { lat: place.lat, lng: place.lng, className: "arrived" };
+      }
+      for (const leg of legs) {
+        const dep = parseTime(leg.dep);
+        const arr = parseTime(leg.arr);
+        if (simMin >= dep && simMin <= arr) {
+          const p = arr === dep ? 1 : clamp((simMin - dep) / (arr - dep), 0, 1);
+          const cls = leg.type === "wait" ? "wait" : leg.type === "air" ? "air" : leg.type === "shinkansen" ? "shinkansen" : "rail";
+          if (leg.type === "wait") {
+            const at = state.pointIndex.get(leg.at) || state.pointIndex.get("haneda") || state.pointIndex.get("tokyo");
+            return { ...at, className: "wait" };
+          }
+          const path = pathForLeg(leg, place, legs, legs.indexOf(leg));
+          const point = interpolatePolyline(path, p);
+          return { ...point, className: cls, path, progress: p };
+        }
+      }
+      const firstDep = legs[0] ? parseTime(legs[0].dep) : START_MIN;
+      if (simMin < firstDep) {
+        const tokyo = state.pointIndex.get("tokyo");
+        return { ...tokyo, className: "rail" };
+      }
+      if (simMin < finalArr) {
+        const previous = [...legs].reverse().find(leg => parseTime(leg.arr) <= simMin);
+        if (previous) {
+          return { ...pointForLegEnd(previous, place), className: "wait" };
+        }
+      }
+      return { lat: place.lat, lng: place.lng, className: "arrived" };
+    }
+
+    function pointForLegEnd(leg, place) {
+      if (leg.type === "wait") {
+        return state.pointIndex.get(leg.at) || state.pointIndex.get("haneda") || state.pointIndex.get("tokyo");
+      }
+      const path = pathForLeg(leg, place);
+      if (path && path.length) return path[path.length - 1];
+      if (isPlaceDestination(leg.to, place)) return { lat: place.lat, lng: place.lng };
+      return guessByName(leg.to) || { lat: place.lat, lng: place.lng };
+    }
+
+    function pathForLeg(leg, place, legs = null, legIndex = -1) {
+      if (state.legPathCache.has(leg)) return state.legPathCache.get(leg);
+      let resolved;
+      if (leg.visual_path_id) {
+        const basePath = state.pathIndex.get(leg.visual_path_id + ":draw") || state.pathIndex.get(leg.visual_path_id);
+        resolved = basePath ? trimPathForLeg(basePath, leg) : fallbackPath(leg, place, legs, legIndex);
+      } else {
+        resolved = fallbackPath(leg, place, legs, legIndex);
+      }
+      state.legPathCache.set(leg, resolved);
+      return resolved;
+    }
+
+    function trimPathForLeg(path, leg) {
+      const fromPoint = state.pointIndex.get(leg.from) || guessByName(leg.from);
+      const toPoint = state.pointIndex.get(leg.to) || guessByName(leg.to);
+      let startIndex = 0;
+      let endIndex = path.length - 1;
+      if (fromPoint) startIndex = nearestPointIndex(path, fromPoint);
+      if (toPoint) endIndex = nearestPointIndex(path, toPoint);
+      const trimmed = startIndex <= endIndex ? path.slice(startIndex, endIndex + 1) : path.slice(endIndex, startIndex + 1).reverse();
+      if (fromPoint && distance(trimmed[0], fromPoint) > 0.35) trimmed.unshift(fromPoint);
+      if (toPoint && distance(trimmed[trimmed.length - 1], toPoint) > 0.35) trimmed.push(toPoint);
+      return trimmed;
+    }
+
+    function nearestPointIndex(path, point) {
+      let bestIndex = 0;
+      let bestDistance = Infinity;
+      path.forEach((candidate, index) => {
+        const d = distance(candidate, point);
+        if (d < bestDistance) {
+          bestDistance = d;
+          bestIndex = index;
+        }
+      });
+      return bestIndex;
+    }
+
+    function fallbackPath(leg, place, legs = null, legIndex = -1) {
+      const previousLeg = legs && legIndex > 0 ? legs[legIndex - 1] : null;
+      const nextLeg = legs && legIndex >= 0 && legIndex < legs.length - 1 ? legs[legIndex + 1] : null;
+      const from = state.pointIndex.get(leg.from)
+        || guessByName(leg.from)
+        || (previousLeg ? pointForLegEnd(previousLeg, place) : null)
+        || state.pointIndex.get("tokyo");
+      const to = state.pointIndex.get(leg.to)
+        || guessByName(leg.to)
+        || (nextLeg ? pointForLegStart(nextLeg, place) : null)
+        || { lat: place.lat, lng: place.lng };
+      return [from, to];
+    }
+
+    function pointForLegStart(leg, place) {
+      if (leg.type === "wait") {
+        return state.pointIndex.get(leg.at) || state.pointIndex.get("haneda") || state.pointIndex.get("tokyo");
+      }
+      if (leg.visual_path_id) {
+        const path = state.pathIndex.get(leg.visual_path_id + ":draw") || state.pathIndex.get(leg.visual_path_id);
+        if (path && path.length) return path[0];
+      }
+      return state.pointIndex.get(leg.from) || guessByName(leg.from) || { lat: place.lat, lng: place.lng };
+    }
+
+    function isPlaceDestination(name, place) {
+      return Boolean(name && (name === place.name || name === place.prefecture || name.includes("県庁") || name.includes("府庁") || name.includes("都庁")));
+    }
+
+    function guessByName(name) {
+      if (!name) return null;
+      if (name.includes("羽田")) return state.pointIndex.get("haneda");
+      if (name.includes("福岡空港")) return state.pointIndex.get("fukuoka_airport");
+      if (name.includes("新千歳")) return state.pointIndex.get("new_chitose");
+      if (name.includes("那覇")) return state.pointIndex.get("naha");
+      if (name.includes("県庁前")) return state.pointIndex.get("kenchomae_naha");
+      if (name.includes("関西空港")) return state.pointIndex.get("kansai");
+      if (name.includes("泉佐野")) return state.pointIndex.get("izumisano");
+      if (name.includes("和歌山市")) return state.pointIndex.get("wakayamashi");
+      if (name.includes("出雲空港")) return state.pointIndex.get("izumo_airport");
+      if (name.includes("松江")) return state.pointIndex.get("matsue");
+      if (name.includes("新青森")) return state.pointIndex.get("shin_aomori");
+      if (name.includes("山形")) return state.pointIndex.get("yamagata");
+      if (name.includes("秋田")) return { lat: 39.7169, lng: 140.1295 };
+      if (name.includes("盛岡")) return state.pointIndex.get("morioka");
+      if (name.includes("仙台")) return state.pointIndex.get("sendai");
+      if (name.includes("福島")) return state.pointIndex.get("fukushima");
+      if (name.includes("宇都宮")) return { lat: 36.5592, lng: 139.8984 };
+      if (name.includes("静岡")) return state.pointIndex.get("shizuoka");
+      if (name.includes("新大阪")) return state.pointIndex.get("shin_osaka");
+      if (name.includes("京都")) return state.pointIndex.get("kyoto");
+      if (name.includes("名古屋")) return state.pointIndex.get("nagoya");
+      if (name.includes("岡山")) return state.pointIndex.get("okayama");
+      if (name.includes("広島")) return state.pointIndex.get("hiroshima");
+      if (name.includes("博多")) return state.pointIndex.get("hakata");
+      if (name.includes("長野")) return state.pointIndex.get("nagano");
+      if (name.includes("富山")) return state.pointIndex.get("toyama");
+      if (name.includes("金沢")) return state.pointIndex.get("kanazawa");
+      if (name.includes("福井")) return state.pointIndex.get("fukui");
+      if (name.includes("高崎")) return state.pointIndex.get("takasaki");
+      if (name.includes("新潟")) return state.pointIndex.get("niigata");
+      return null;
+    }
+
+    function makeArc(a, b, steps) {
+      const pts = [];
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const lat = a.lat + (b.lat - a.lat) * t + Math.sin(Math.PI * t) * 2.2;
+        const lng = a.lng + (b.lng - a.lng) * t;
+        pts.push({ lat, lng });
+      }
+      return pts;
+    }
+
+    function interpolatePolyline(points, p) {
+      if (!points || points.length === 0) return state.pointIndex.get("tokyo");
+      if (points.length === 1) return points[0];
+      const { lengths, total } = pathMeasure(points);
+      let target = total * clamp(p, 0, 1);
+      for (let i = 0; i < lengths.length; i++) {
+        if (target <= lengths[i]) {
+          const t = lengths[i] === 0 ? 0 : target / lengths[i];
+          return {
+            lat: points[i].lat + (points[i + 1].lat - points[i].lat) * t,
+            lng: points[i].lng + (points[i + 1].lng - points[i].lng) * t
+          };
+        }
+        target -= lengths[i];
+      }
+      return points[points.length - 1];
+    }
+
+    function pathMeasure(points) {
+      const cached = state.pathMeasureCache.get(points);
+      if (cached) return cached;
+      const lengths = [];
+      let total = 0;
+      for (let i = 0; i < points.length - 1; i++) {
+        const d = distance(points[i], points[i + 1]);
+        lengths.push(d);
+        total += d;
+      }
+      const measure = { lengths, total };
+      state.pathMeasureCache.set(points, measure);
+      return measure;
+    }
+
+    function distance(a, b) {
+      const x = (a.lng - b.lng) * Math.cos(((a.lat + b.lat) / 2) * Math.PI / 180);
+      const y = a.lat - b.lat;
+      return Math.sqrt(x * x + y * y);
+    }
+
+    function activeEvent(place, simMin) {
+      let best = null;
+      for (const ev of place.status_events || []) {
+        const t = parseTime(ev.time);
+        const delta = simMin - t;
+        if (delta >= 0 && delta <= 9 && (!best || ev.priority > best.priority || delta < best.delta)) {
+          best = { ...ev, delta };
+        }
+      }
+      if (best) return best;
+      const leg = (place.legs || []).find(l => simMin >= parseTime(l.dep) && simMin <= parseTime(l.arr));
+      if (!leg) return null;
+      if (leg.type === "wait") return { label: `${place.prefecture} ${leg.at || "乗換"}で待機`, priority: 1, leg };
+      if (leg.type === "air") return { label: `${place.prefecture} ${leg.line} 飛行中`, priority: 1, leg };
+      if (leg.type === "shinkansen") return { label: `${place.prefecture} ${leg.line} 移動中`, priority: 1, leg };
+      return { label: `${place.prefecture} ${leg.line || "移動"} 移動中`, priority: 1, leg };
+    }
+
+    function renderEvents(highlights, simMin) {
+      const feed = document.getElementById("eventFeed");
+      if (USE_LIVE_NAVITIME || USE_SLOW5_DEMO) {
+        const liveRows = FEATURED_PREFECTURES
+          .map(name => state.data.places.find(place => place.prefecture === name))
+          .filter(Boolean)
+          .map(place => {
+            const event = eventForFixedSlot(place, highlights, simMin);
+            return { place, event };
+          });
+        feed.innerHTML = liveRows.map(({ place, event }) => `
+          <div class="event-row">
+            <div class="pref">${place.prefecture}</div>
+            <div class="state">${event.label}<small>${eventMeta(place, event, simMin)}</small></div>
+          </div>
+        `).join("");
+        return;
+      }
+      const sorted = highlights
+        .sort((a, b) => (b.event.priority - a.event.priority) || (b.place.duration_minutes - a.place.duration_minutes))
+        .slice(0, 4);
+      const fallback = state.data.places
+        .filter(p => parseTime(p.arrival_label) > simMin)
+        .sort((a, b) => b.duration_minutes - a.duration_minutes)
+        .slice(0, 4 - sorted.length)
+        .map(place => {
+          const nextLeg = nextEventLeg(place, simMin);
+          return { place, event: { label: nextLeg ? `${place.prefecture} ${nextLeg.line || "移動"} 待機` : `${place.arrival_label} 着予定`, priority: 0, leg: nextLeg }};
+        });
+      feed.innerHTML = [...sorted, ...fallback].map(({ place, event }) => `
+        <div class="event-row">
+          <div class="pref">${place.prefecture}</div>
+          <div class="state">${event.label}<small>${eventMeta(place, event, simMin)}</small></div>
+        </div>
+      `).join("");
+    }
+
+    function eventForFixedSlot(place, highlights, simMin) {
+      const highlighted = highlights.find(item => item.place.prefecture === place.prefecture);
+      if (highlighted) return highlighted.event;
+      const leg = currentOrNextLeg(place, simMin);
+      if (!leg) return { label: `${place.arrival_label} 着予定`, priority: 0, leg: null };
+      const dep = parseTime(leg.dep);
+      const arr = parseTime(leg.arr);
+      if (simMin < dep) {
+        return { label: `${place.prefecture} ${leg.line || "次の移動"} 待機`, priority: 0, leg };
+      }
+      if (simMin <= arr) {
+        const suffix = leg.type === "wait" ? "待機" : leg.type === "air" ? "飛行中" : "移動中";
+        return { label: `${place.prefecture} ${leg.line || "移動"} ${suffix}`, priority: 0, leg };
+      }
+      return { label: `${place.prefecture} 到着済み`, priority: 0, leg };
+    }
+
+    function currentOrNextLeg(place, simMin) {
+      const legs = place.legs || [];
+      return legs.find(leg => simMin >= parseTime(leg.dep) && simMin <= parseTime(leg.arr))
+        || legs.find(leg => simMin < parseTime(leg.dep))
+        || legs[legs.length - 1]
+        || null;
+    }
+
+    function nextEventLeg(place, simMin) {
+      const legs = place.legs || [];
+      return legs.find(leg => simMin <= parseTime(leg.arr)) || legs[legs.length - 1] || null;
+    }
+
+    function eventMeta(place, event, simMin) {
+      const leg = event.leg || nextEventLeg(place, simMin);
+      if (!leg) return `${routeLabel(place)} / --:--発 / ${place.arrival_label}着`;
+      const type = moveTypeLabel(leg);
+      const dep = leg.dep || "--:--";
+      const arr = leg.arr || place.arrival_label;
+      return `${type} / ${dep}発 / ${arr}着`;
+    }
+
+    function drawSlowReveal(data) {
+      const list = document.getElementById("slowReveal");
+      const slowest = [...data.places].sort((a, b) => b.duration_minutes - a.duration_minutes).slice(0, 5);
+      list.innerHTML = slowest.map((p, i) => `
+        <div>
+          <span>${i + 1}. ${p.prefecture}</span>
+          <span>${p.arrival_label}</span>
+        </div>
+      `).join("");
+    }
+
+    function drawMovementTrail(item, pos) {
+      const isFocused = state.slowestPlace && item.place.prefecture === state.slowestPlace.prefecture;
+      if (!state.trailLayer || !pos.path || typeof pos.progress !== "number") return;
+      if (!state.zoomedOut && !isFocused && pos.className !== "air") return;
+      if (pos.className === "wait" || pos.className === "arrived") return;
+      const visiblePath = slicePolyline(pos.path, Math.max(0, pos.progress - 0.08), pos.progress);
+      if (visiblePath.length < 2) return;
+      const isAir = pos.className === "air";
+      const primaryColor = isAir ? "#c084fc" : isFocused ? "#7dd3fc" : "#39ff14";
+      const glowColor = isAir ? "#eadcff" : isFocused ? "#dff6ff" : "#bff7c6";
+      L.polyline(visiblePath.map(p => [p.lat, p.lng]), {
+        color: glowColor,
+        weight: isAir ? 8 : 6,
+        opacity: isAir ? 0.14 : 0.1,
+        lineCap: "round",
+        className: "route-line"
+      }).addTo(state.trailLayer);
+      L.polyline(visiblePath.map(p => [p.lat, p.lng]), {
+        color: primaryColor,
+        weight: isAir ? 3.4 : 2.8,
+        opacity: isAir ? 0.5 : 0.42,
+        lineCap: "round",
+        className: "route-line"
+      }).addTo(state.trailLayer);
+      L.polyline(visiblePath.slice(-2).map(p => [p.lat, p.lng]), {
+        color: "#fff",
+        weight: 1.5,
+        opacity: 0.68,
+        lineCap: "round",
+        className: "route-line"
+      }).addTo(state.trailLayer);
+    }
+
+    function slicePolyline(points, fromProgress, toProgress) {
+      const start = clamp(fromProgress, 0, 1);
+      const end = clamp(toProgress, 0, 1);
+      if (!points || points.length < 2) return points || [];
+      const { lengths, total } = pathMeasure(points);
+      const startDist = total * start;
+      const endDist = total * end;
+      const out = [pointAtDistance(points, lengths, startDist)];
+      let walked = 0;
+      for (let i = 0; i < lengths.length; i++) {
+        const next = walked + lengths[i];
+        if (next > startDist && next < endDist) out.push(points[i + 1]);
+        walked = next;
+      }
+      out.push(pointAtDistance(points, lengths, endDist));
+      return out;
+    }
+
+    function pointAtDistance(points, lengths, target) {
+      if (target <= 0) return points[0];
+      let walked = 0;
+      for (let i = 0; i < lengths.length; i++) {
+        const next = walked + lengths[i];
+        if (target <= next) {
+          const t = lengths[i] === 0 ? 0 : (target - walked) / lengths[i];
+          return {
+            lat: points[i].lat + (points[i + 1].lat - points[i].lat) * t,
+            lng: points[i].lng + (points[i + 1].lng - points[i].lng) * t
+          };
+        }
+        walked = next;
+      }
+      return points[points.length - 1];
+    }
+
+    function updateArrivalFill(place, cls, simMin) {
+      const fill = state.arrivalFills.get(place.prefecture);
+      if (!fill) return;
+      const finalHighlight = isFinalist(place, simMin);
+      if (!state.zoomedOut) {
+        fill.setStyle({
+          color: "rgba(255,255,255,.07)",
+          fillColor: "#111827",
+          fillOpacity: 0,
+          opacity: 1,
+          weight: 0.35
+        });
+        return;
+      }
+      const arrived = cls === "arrived";
+      const color = arrived ? arrivalColor(place.duration_minutes) : "#111827";
+      fill.setStyle({
+        color: arrived ? (finalHighlight ? "#ff2d2d" : color) : "rgba(255,255,255,.035)",
+        fillColor: arrived ? (finalHighlight ? "#ff2d2d" : color) : "#111827",
+        fillOpacity: arrived ? (finalHighlight ? 0.2 : 0.16) : 0.014,
+        opacity: arrived ? (finalHighlight ? 0.78 : 0.32) : 0.08,
+        weight: arrived ? (finalHighlight ? 1.45 : 0.75) : 0.45
+      });
+    }
+
+    function arrivalColor(duration) {
+      if (duration <= 180) return colors.shinkansen;
+      if (duration <= 360) return "#ffd400";
+      if (duration <= 540) return "#ff2d2d";
+      return "#050505";
+    }
+
+    function setParticleClass(item, cls) {
+      if (item.currentClass === cls) return;
+      item.currentClass = cls;
+      const el = item.marker.getElement();
+      if (!el) return;
+      const dot = el.querySelector(".particle");
+      if (!dot) return;
+      dot.className = `particle ${cls}`;
+      el.classList.toggle("is-arrived", cls === "arrived");
+    }
+
+    function setFinalistHighlight(item, simMin) {
+      const el = item.marker.getElement();
+      if (!el) return;
+      el.classList.toggle("is-finalist", isFinalist(item.place, simMin));
+    }
+
+    function isFinalist(place, simMin) {
+      if (!state.slowestPlace || place.prefecture !== state.slowestPlace.prefecture) return false;
+      return simMin >= state.lastArrivalMin;
+    }
+
+    function routeLabel(place) {
+      if (place.route_type === "air") return "AIR";
+      if (place.route_type === "shinkansen") return "SHINKANSEN";
+      if (place.route_type === "rail") return "RAIL";
+      return "MIXED";
+    }
+
+    function moveTypeLabel(leg) {
+      if (!leg) return "MIXED";
+      if (leg.type === "air") return "AIR";
+      if (leg.type === "shinkansen") return "SHINKANSEN";
+      if (leg.type === "wait") return "WAIT";
+      if (leg.type === "local") return "WALK";
+      return "RAIL";
+    }
+
+    function parseTime(value) {
+      if (!value) return START_MIN;
+      if (typeof value === "number") return value;
+      const m = String(value).match(/(\d{1,2}):(\d{2})/);
+      if (!m) return START_MIN;
+      return Number(m[1]) * 60 + Number(m[2]);
+    }
+
+    function toClock(mins) {
+      const total = Math.round(mins);
+      const h = Math.floor(total / 60) % 24;
+      const m = total % 60;
+      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    }
+
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+  </script>
+</body>
+</html>

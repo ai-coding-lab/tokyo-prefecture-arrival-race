@@ -1,0 +1,6 @@
+.env
+data.json
+route_geojson.json
+*.local.json
+*.snapshot.json
+node_modules/

@@ -1,0 +1,971 @@
+{
+  "generated_at": "demo-handmade",
+  "mode": "demo",
+  "source_quality": "handmade_internal_demo",
+  "notice": "This demo data is hand-authored for UI development. It is not copied from NAVITIME API responses.",
+  "origin": {
+    "name": "東京駅",
+    "lat": 35.681236,
+    "lng": 139.767125,
+    "departure_local": "08:00"
+  },
+  "assumptions": {
+    "route_source": "handmade demo",
+    "visual_path_source": "manual visual paths",
+    "note": "時刻・経路はUI開発用の手作りデモ。実際の経路検索結果ではない。"
+  },
+  "visual_points": {
+    "tokyo": [35.681236, 139.767125],
+    "ueno": [35.713768, 139.777254],
+    "omiya": [35.906439, 139.62405],
+    "urawa": [35.858505, 139.65712],
+    "shinjuku": [35.690921, 139.700258],
+    "tachikawa": [35.698202, 139.413704],
+    "hachioji": [35.655646, 139.338968],
+    "otsuki": [35.612456, 138.942337],
+    "kofu": [35.667124, 138.568289],
+    "kinshicho": [35.696826, 139.814847],
+    "funabashi": [35.701733, 139.985705],
+    "chiba": [35.613001, 140.113064],
+    "yokohama": [35.465833, 139.622222],
+    "kannai": [35.44357, 139.636997],
+    "shinagawa": [35.628471, 139.73876],
+    "hamamatsucho": [35.655646, 139.756749],
+    "haneda": [35.549393, 139.779839],
+    "shin_yokohama": [35.507456, 139.617585],
+    "shizuoka": [34.97164, 138.38892],
+    "nagoya": [35.170915, 136.881537],
+    "kyoto": [34.985849, 135.758766],
+    "shin_osaka": [34.73348, 135.500109],
+    "okayama": [34.66631, 133.91858],
+    "hiroshima": [34.39747, 132.47562],
+    "hakata": [33.590183, 130.420685],
+    "sendai": [38.260132, 140.882438],
+    "morioka": [39.701683, 141.136369],
+    "shin_aomori": [40.827537, 140.693364],
+    "yamagata": [38.24892, 140.32727],
+    "kanazawa": [36.578057, 136.648659],
+    "toyama": [36.701851, 137.213676],
+    "niigata": [37.912139, 139.061789],
+    "fukushima": [37.754123, 140.45956],
+    "takasaki": [36.322239, 139.012354],
+    "nagano": [36.643307, 138.188586],
+    "fukui": [36.062083, 136.223522],
+    "fukuoka_airport": [33.5859, 130.4507],
+    "new_chitose": [42.7752, 141.6923],
+    "naha": [26.2067, 127.6469],
+    "itami": [34.7855, 135.4382],
+    "kansai": [34.4342, 135.2442],
+    "kumamoto_airport": [32.8373, 130.855],
+    "kagoshima_airport": [31.8034, 130.7194],
+    "matsuyama_airport": [33.8272, 132.6997],
+    "takamatsu_airport": [34.2142, 134.0156],
+    "kochi_airport": [33.5461, 133.6694],
+    "izumo_airport": [35.4149, 132.889],
+    "tottori_airport": [35.5301, 134.1667],
+    "toyama_airport": [36.6483, 137.1875],
+    "saga_airport": [33.1497, 130.302],
+    "nagasaki_airport": [32.9169, 129.9136],
+    "miyazaki_airport": [31.8772, 131.4486]
+  },
+  "visual_paths": {
+    "jr_keihin_tohoku_tokyo_hamamatsucho": ["tokyo", "hamamatsucho"],
+    "tokyo_monorail_hamamatsucho_haneda": ["hamamatsucho", "haneda"],
+    "jr_yamanote_tokyo_shinagawa": ["tokyo", "shinagawa"],
+    "jr_keihin_tohoku_tokyo_urawa": ["tokyo", "ueno", "urawa"],
+    "jr_chuo_tokyo_shinjuku": ["tokyo", "shinjuku"],
+    "jr_chuo_shinjuku_kofu": ["shinjuku", "tachikawa", "hachioji", "otsuki", "kofu"],
+    "jr_sobu_tokyo_chiba": ["tokyo", "kinshicho", "funabashi", "chiba"],
+    "jr_tokaido_tokyo_yokohama": ["tokyo", "shinagawa", "yokohama"],
+    "jr_negishi_yokohama_kannai": ["yokohama", "kannai"],
+    "shinkansen_tokaido_tokyo_shinosaka": ["tokyo", "shinagawa", "shin_yokohama", "shizuoka", "nagoya", "kyoto", "shin_osaka"],
+    "shinkansen_sanyo_shinosaka_hakata": ["tokyo", "shinagawa", "shin_yokohama", "shizuoka", "nagoya", "kyoto", "shin_osaka", "okayama", "hiroshima", "hakata"],
+    "shinkansen_tohoku_tokyo_shinaomori": ["tokyo", "ueno", "omiya", "fukushima", "sendai", "morioka", "shin_aomori"],
+    "shinkansen_yamagata_tokyo_yamagata": ["tokyo", "ueno", "omiya", "fukushima", "yamagata"],
+    "shinkansen_joetsu_tokyo_niigata": ["tokyo", "ueno", "omiya", "takasaki", "niigata"],
+    "shinkansen_hokuriku_tokyo_kanazawa": ["tokyo", "ueno", "omiya", "takasaki", "nagano", "toyama", "kanazawa"],
+    "shinkansen_hokuriku_tokyo_fukui": ["tokyo", "ueno", "omiya", "takasaki", "nagano", "toyama", "kanazawa", "fukui"],
+    "air_hnd_fuk": ["haneda", "fukuoka_airport"],
+    "air_hnd_cts": ["haneda", "new_chitose"],
+    "air_hnd_oka": ["haneda", "naha"],
+    "air_hnd_itm": ["haneda", "itami"],
+    "air_hnd_kix": ["haneda", "kansai"],
+    "air_hnd_kmj": ["haneda", "kumamoto_airport"],
+    "air_hnd_koj": ["haneda", "kagoshima_airport"],
+    "air_hnd_myj": ["haneda", "matsuyama_airport"],
+    "air_hnd_tak": ["haneda", "takamatsu_airport"],
+    "air_hnd_kcz": ["haneda", "kochi_airport"],
+    "air_hnd_izo": ["haneda", "izumo_airport"],
+    "air_hnd_ttj": ["haneda", "tottori_airport"],
+    "air_hnd_toy": ["haneda", "toyama_airport"],
+    "air_hnd_hsg": ["haneda", "saga_airport"],
+    "air_hnd_ngs": ["haneda", "nagasaki_airport"],
+    "air_hnd_kmi": ["haneda", "miyazaki_airport"]
+  },
+  "places": [
+    {
+      "prefecture": "北海道",
+      "name": "北海道庁",
+      "lat": 43.064325,
+      "lng": 141.346878,
+      "duration_minutes": 275,
+      "arrival_label": "12:35",
+      "rank": 35,
+      "route_type": "air",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "local_train", "line": "JR京浜東北線", "from": "東京", "to": "浜松町", "dep": "08:06", "arr": "08:11", "visual_path_id": "jr_keihin_tohoku_tokyo_hamamatsucho"},
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:18", "arr": "08:38", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:38", "arr": "09:25"},
+        {"type": "air", "line": "羽田→新千歳", "from": "羽田空港", "to": "新千歳空港", "dep": "09:25", "arr": "11:00", "visual_path_id": "air_hnd_cts"},
+        {"type": "local", "line": "札幌方面アクセス", "from": "新千歳空港", "to": "北海道庁", "dep": "11:12", "arr": "12:35"}
+      ],
+      "status_events": [
+        {"time": "08:38", "label": "北海道 羽田待機", "priority": 2},
+        {"time": "09:25", "label": "北海道 新千歳へ離陸", "priority": 3},
+        {"time": "12:35", "label": "北海道庁 着弾", "priority": 1}
+      ]
+    },
+    {
+      "prefecture": "青森県",
+      "name": "青森県庁",
+      "lat": 40.824589,
+      "lng": 140.740548,
+      "duration_minutes": 250,
+      "arrival_label": "12:10",
+      "rank": 31,
+      "route_type": "shinkansen",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東北新幹線", "from": "東京", "to": "新青森", "dep": "08:20", "arr": "11:35", "visual_path_id": "shinkansen_tohoku_tokyo_shinaomori"},
+        {"type": "local", "line": "青森市内アクセス", "from": "新青森", "to": "青森県庁", "dep": "11:42", "arr": "12:10"}
+      ],
+      "status_events": [
+        {"time": "09:55", "label": "青森県 仙台通過", "priority": 2},
+        {"time": "12:10", "label": "青森県庁 着弾", "priority": 1}
+      ]
+    },
+    {
+      "prefecture": "岩手県",
+      "name": "岩手県庁",
+      "lat": 39.703619,
+      "lng": 141.152684,
+      "duration_minutes": 176,
+      "arrival_label": "10:56",
+      "rank": 21,
+      "route_type": "shinkansen",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東北新幹線", "from": "東京", "to": "盛岡", "dep": "08:16", "arr": "10:42", "visual_path_id": "shinkansen_tohoku_tokyo_shinaomori"},
+        {"type": "local", "line": "盛岡市内アクセス", "from": "盛岡", "to": "岩手県庁", "dep": "10:45", "arr": "10:56"}
+      ],
+      "status_events": [{"time": "10:56", "label": "岩手県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "宮城県",
+      "name": "宮城県庁",
+      "lat": 38.268837,
+      "lng": 140.8721,
+      "duration_minutes": 112,
+      "arrival_label": "09:52",
+      "rank": 12,
+      "route_type": "shinkansen",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東北新幹線", "from": "東京", "to": "仙台", "dep": "08:12", "arr": "09:42", "visual_path_id": "shinkansen_tohoku_tokyo_shinaomori"},
+        {"type": "local", "line": "仙台市内アクセス", "from": "仙台", "to": "宮城県庁", "dep": "09:44", "arr": "09:52"}
+      ],
+      "status_events": [{"time": "09:52", "label": "宮城県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "秋田県",
+      "name": "秋田県庁",
+      "lat": 39.718626,
+      "lng": 140.102381,
+      "duration_minutes": 260,
+      "arrival_label": "12:20",
+      "rank": 33,
+      "route_type": "mixed",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東北・秋田新幹線", "from": "東京", "to": "秋田", "dep": "08:08", "arr": "12:04", "visual_path_id": "shinkansen_tohoku_tokyo_shinaomori"},
+        {"type": "local", "line": "秋田市内アクセス", "from": "秋田", "to": "秋田県庁", "dep": "12:07", "arr": "12:20"}
+      ],
+      "status_events": [{"time": "12:20", "label": "秋田県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "山形県",
+      "name": "山形県庁",
+      "lat": 38.240467,
+      "lng": 140.363372,
+      "duration_minutes": 190,
+      "arrival_label": "11:10",
+      "rank": 23,
+      "route_type": "shinkansen",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "山形新幹線", "from": "東京", "to": "山形", "dep": "08:08", "arr": "10:55", "visual_path_id": "shinkansen_yamagata_tokyo_yamagata"},
+        {"type": "local", "line": "山形市内アクセス", "from": "山形", "to": "山形県庁", "dep": "10:58", "arr": "11:10"}
+      ],
+      "status_events": [{"time": "11:10", "label": "山形県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "福島県",
+      "name": "福島県庁",
+      "lat": 37.750298,
+      "lng": 140.467551,
+      "duration_minutes": 101,
+      "arrival_label": "09:41",
+      "rank": 10,
+      "route_type": "shinkansen",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東北新幹線", "from": "東京", "to": "福島", "dep": "08:16", "arr": "09:28", "visual_path_id": "shinkansen_tohoku_tokyo_shinaomori"},
+        {"type": "local", "line": "福島市内アクセス", "from": "福島", "to": "福島県庁", "dep": "09:31", "arr": "09:41"}
+      ],
+      "status_events": [{"time": "09:41", "label": "福島県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "茨城県",
+      "name": "茨城県庁",
+      "lat": 36.341817,
+      "lng": 140.446793,
+      "duration_minutes": 92,
+      "arrival_label": "09:32",
+      "rank": 8,
+      "route_type": "rail",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "limited_express", "line": "常磐線特急", "from": "東京", "to": "水戸", "dep": "08:05", "arr": "09:15"},
+        {"type": "local", "line": "水戸市内アクセス", "from": "水戸", "to": "茨城県庁", "dep": "09:18", "arr": "09:32"}
+      ],
+      "status_events": [{"time": "09:32", "label": "茨城県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "栃木県",
+      "name": "栃木県庁",
+      "lat": 36.565725,
+      "lng": 139.883565,
+      "duration_minutes": 76,
+      "arrival_label": "09:16",
+      "rank": 6,
+      "route_type": "shinkansen",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東北新幹線", "from": "東京", "to": "宇都宮", "dep": "08:12", "arr": "09:00", "visual_path_id": "shinkansen_tohoku_tokyo_shinaomori"},
+        {"type": "local", "line": "宇都宮市内アクセス", "from": "宇都宮", "to": "栃木県庁", "dep": "09:04", "arr": "09:16"}
+      ],
+      "status_events": [{"time": "09:16", "label": "栃木県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "群馬県",
+      "name": "群馬県庁",
+      "lat": 36.391208,
+      "lng": 139.060856,
+      "duration_minutes": 86,
+      "arrival_label": "09:26",
+      "rank": 7,
+      "route_type": "shinkansen",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "上越新幹線", "from": "東京", "to": "高崎", "dep": "08:16", "arr": "09:05", "visual_path_id": "shinkansen_joetsu_tokyo_niigata"},
+        {"type": "local", "line": "前橋方面アクセス", "from": "高崎", "to": "群馬県庁", "dep": "09:10", "arr": "09:26"}
+      ],
+      "status_events": [{"time": "09:26", "label": "群馬県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "埼玉県",
+      "name": "埼玉県庁",
+      "lat": 35.856999,
+      "lng": 139.648849,
+      "duration_minutes": 44,
+      "arrival_label": "08:44",
+      "rank": 2,
+      "route_type": "rail",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "local_train", "line": "上野東京ライン", "from": "東京", "to": "浦和", "dep": "08:06", "arr": "08:32", "visual_path_id": "jr_keihin_tohoku_tokyo_urawa"},
+        {"type": "walk", "line": "徒歩", "from": "浦和", "to": "埼玉県庁", "dep": "08:32", "arr": "08:44"}
+      ],
+      "status_events": [{"time": "08:44", "label": "埼玉県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "千葉県",
+      "name": "千葉県庁",
+      "lat": 35.60472,
+      "lng": 140.12333,
+      "duration_minutes": 52,
+      "arrival_label": "08:52",
+      "rank": 4,
+      "route_type": "rail",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "rapid_train", "line": "総武快速線", "from": "東京", "to": "千葉", "dep": "08:05", "arr": "08:43", "visual_path_id": "jr_sobu_tokyo_chiba"},
+        {"type": "local", "line": "千葉市内アクセス", "from": "千葉", "to": "千葉県庁", "dep": "08:45", "arr": "08:52"}
+      ],
+      "status_events": [{"time": "08:52", "label": "千葉県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "東京都",
+      "name": "東京都庁",
+      "lat": 35.689634,
+      "lng": 139.692101,
+      "duration_minutes": 32,
+      "arrival_label": "08:32",
+      "rank": 1,
+      "route_type": "rail",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "local_train", "line": "中央線快速", "from": "東京", "to": "新宿", "dep": "08:04", "arr": "08:18", "visual_path_id": "jr_chuo_tokyo_shinjuku"},
+        {"type": "walk", "line": "徒歩", "from": "新宿", "to": "東京都庁", "dep": "08:18", "arr": "08:32"}
+      ],
+      "status_events": [{"time": "08:32", "label": "東京都庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "神奈川県",
+      "name": "神奈川県庁",
+      "lat": 35.447507,
+      "lng": 139.642345,
+      "duration_minutes": 55,
+      "arrival_label": "08:55",
+      "rank": 5,
+      "route_type": "rail",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "local_train", "line": "東海道線", "from": "東京", "to": "横浜", "dep": "08:05", "arr": "08:32", "visual_path_id": "jr_tokaido_tokyo_yokohama"},
+        {"type": "local", "line": "根岸線", "from": "横浜", "to": "関内", "dep": "08:38", "arr": "08:45", "visual_path_id": "jr_negishi_yokohama_kannai"},
+        {"type": "walk", "line": "徒歩", "from": "関内", "to": "神奈川県庁", "dep": "08:45", "arr": "08:55"}
+      ],
+      "status_events": [{"time": "08:55", "label": "神奈川県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "新潟県",
+      "name": "新潟県庁",
+      "lat": 37.902451,
+      "lng": 139.023245,
+      "duration_minutes": 142,
+      "arrival_label": "10:22",
+      "rank": 16,
+      "route_type": "shinkansen",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "上越新幹線", "from": "東京", "to": "新潟", "dep": "08:24", "arr": "10:05", "visual_path_id": "shinkansen_joetsu_tokyo_niigata"},
+        {"type": "local", "line": "新潟市内アクセス", "from": "新潟", "to": "新潟県庁", "dep": "10:10", "arr": "10:22"}
+      ],
+      "status_events": [{"time": "10:22", "label": "新潟県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "富山県",
+      "name": "富山県庁",
+      "lat": 36.695291,
+      "lng": 137.211338,
+      "duration_minutes": 155,
+      "arrival_label": "10:35",
+      "rank": 18,
+      "route_type": "shinkansen",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "北陸新幹線", "from": "東京", "to": "富山", "dep": "08:12", "arr": "10:22", "visual_path_id": "shinkansen_hokuriku_tokyo_kanazawa"},
+        {"type": "local", "line": "富山市内アクセス", "from": "富山", "to": "富山県庁", "dep": "10:26", "arr": "10:35"}
+      ],
+      "status_events": [
+        {"time": "09:08", "label": "富山県 長野通過", "priority": 2},
+        {"time": "10:35", "label": "富山県庁 着弾", "priority": 1}
+      ]
+    },
+    {
+      "prefecture": "石川県",
+      "name": "石川県庁",
+      "lat": 36.594617,
+      "lng": 136.625572,
+      "duration_minutes": 176,
+      "arrival_label": "10:56",
+      "rank": 22,
+      "route_type": "shinkansen",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "北陸新幹線", "from": "東京", "to": "金沢", "dep": "08:12", "arr": "10:42", "visual_path_id": "shinkansen_hokuriku_tokyo_kanazawa"},
+        {"type": "local", "line": "金沢市内アクセス", "from": "金沢", "to": "石川県庁", "dep": "10:46", "arr": "10:56"}
+      ],
+      "status_events": [{"time": "10:56", "label": "石川県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "福井県",
+      "name": "福井県庁",
+      "lat": 36.065219,
+      "lng": 136.221642,
+      "duration_minutes": 202,
+      "arrival_label": "11:22",
+      "rank": 25,
+      "route_type": "shinkansen",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "北陸新幹線", "from": "東京", "to": "福井", "dep": "08:12", "arr": "11:08", "visual_path_id": "shinkansen_hokuriku_tokyo_fukui"},
+        {"type": "local", "line": "福井市内アクセス", "from": "福井", "to": "福井県庁", "dep": "11:12", "arr": "11:22"}
+      ],
+      "status_events": [{"time": "11:22", "label": "福井県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "山梨県",
+      "name": "山梨県庁",
+      "lat": 35.66395,
+      "lng": 138.56841,
+      "duration_minutes": 124,
+      "arrival_label": "10:04",
+      "rank": 14,
+      "route_type": "rail",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "limited_express", "line": "中央線特急", "from": "新宿", "to": "甲府", "dep": "08:15", "arr": "09:48", "visual_path_id": "jr_chuo_shinjuku_kofu"},
+        {"type": "walk", "line": "徒歩", "from": "甲府", "to": "山梨県庁", "dep": "09:48", "arr": "10:04"}
+      ],
+      "status_events": [{"time": "10:04", "label": "山梨県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "長野県",
+      "name": "長野県庁",
+      "lat": 36.651289,
+      "lng": 138.181224,
+      "duration_minutes": 118,
+      "arrival_label": "09:58",
+      "rank": 13,
+      "route_type": "shinkansen",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "北陸新幹線", "from": "東京", "to": "長野", "dep": "08:12", "arr": "09:42", "visual_path_id": "shinkansen_hokuriku_tokyo_kanazawa"},
+        {"type": "local", "line": "長野市内アクセス", "from": "長野", "to": "長野県庁", "dep": "09:46", "arr": "09:58"}
+      ],
+      "status_events": [{"time": "09:58", "label": "長野県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "岐阜県",
+      "name": "岐阜県庁",
+      "lat": 35.391227,
+      "lng": 136.722291,
+      "duration_minutes": 155,
+      "arrival_label": "10:35",
+      "rank": 19,
+      "route_type": "shinkansen",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "from": "東京", "to": "名古屋", "dep": "08:12", "arr": "09:48", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "東海道線", "from": "名古屋", "to": "岐阜県庁", "dep": "09:55", "arr": "10:35"}
+      ],
+      "status_events": [{"time": "10:35", "label": "岐阜県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "静岡県",
+      "name": "静岡県庁",
+      "lat": 34.976944,
+      "lng": 138.383056,
+      "duration_minutes": 73,
+      "arrival_label": "09:13",
+      "rank": 3,
+      "route_type": "shinkansen",
+      "time_bucket": "within_2h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "from": "東京", "to": "静岡", "dep": "08:10", "arr": "09:03", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "walk", "line": "徒歩", "from": "静岡", "to": "静岡県庁", "dep": "09:03", "arr": "09:13"}
+      ],
+      "status_events": [{"time": "09:13", "label": "静岡県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "愛知県",
+      "name": "愛知県庁",
+      "lat": 35.180188,
+      "lng": 136.906565,
+      "duration_minutes": 125,
+      "arrival_label": "10:05",
+      "rank": 15,
+      "route_type": "shinkansen",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "from": "東京", "to": "名古屋", "dep": "08:12", "arr": "09:48", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "名古屋市内アクセス", "from": "名古屋", "to": "愛知県庁", "dep": "09:52", "arr": "10:05"}
+      ],
+      "status_events": [{"time": "10:05", "label": "愛知県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "三重県",
+      "name": "三重県庁",
+      "lat": 34.730283,
+      "lng": 136.508611,
+      "duration_minutes": 205,
+      "arrival_label": "11:25",
+      "rank": 26,
+      "route_type": "mixed",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "from": "東京", "to": "名古屋", "dep": "08:12", "arr": "09:48", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "近鉄/快速アクセス", "from": "名古屋", "to": "三重県庁", "dep": "10:00", "arr": "11:25"}
+      ],
+      "status_events": [{"time": "11:25", "label": "三重県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "滋賀県",
+      "name": "滋賀県庁",
+      "lat": 35.004532,
+      "lng": 135.86859,
+      "duration_minutes": 172,
+      "arrival_label": "10:52",
+      "rank": 20,
+      "route_type": "shinkansen",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "from": "東京", "to": "京都", "dep": "08:12", "arr": "10:24", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "琵琶湖線", "from": "京都", "to": "滋賀県庁", "dep": "10:30", "arr": "10:52"}
+      ],
+      "status_events": [{"time": "10:52", "label": "滋賀県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "京都府",
+      "name": "京都府庁",
+      "lat": 35.021242,
+      "lng": 135.755613,
+      "duration_minutes": 150,
+      "arrival_label": "10:30",
+      "rank": 17,
+      "route_type": "shinkansen",
+      "time_bucket": "within_3h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "from": "東京", "to": "京都", "dep": "08:12", "arr": "10:24", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "京都市内アクセス", "from": "京都", "to": "京都府庁", "dep": "10:25", "arr": "10:30"}
+      ],
+      "status_events": [{"time": "10:30", "label": "京都府庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "大阪府",
+      "name": "大阪府庁",
+      "lat": 34.686316,
+      "lng": 135.519711,
+      "duration_minutes": 190,
+      "arrival_label": "11:10",
+      "rank": 24,
+      "route_type": "shinkansen",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "service": "のぞみデモ", "from": "東京", "to": "新大阪", "dep": "08:12", "arr": "10:39", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "大阪市内アクセス", "from": "新大阪", "to": "大阪府庁", "dep": "10:45", "arr": "11:10"}
+      ],
+      "status_events": [
+        {"time": "08:12", "label": "大阪府 のぞみデモ発車", "priority": 2},
+        {"time": "09:50", "label": "大阪府 名古屋通過", "priority": 3},
+        {"time": "11:10", "label": "大阪府庁 着弾", "priority": 1}
+      ]
+    },
+    {
+      "prefecture": "兵庫県",
+      "name": "兵庫県庁",
+      "lat": 34.691279,
+      "lng": 135.183025,
+      "duration_minutes": 215,
+      "arrival_label": "11:35",
+      "rank": 28,
+      "route_type": "shinkansen",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道・山陽新幹線", "from": "東京", "to": "新神戸", "dep": "08:12", "arr": "10:55", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "神戸市内アクセス", "from": "新神戸", "to": "兵庫県庁", "dep": "11:00", "arr": "11:35"}
+      ],
+      "status_events": [{"time": "11:35", "label": "兵庫県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "奈良県",
+      "name": "奈良県庁",
+      "lat": 34.685087,
+      "lng": 135.804847,
+      "duration_minutes": 210,
+      "arrival_label": "11:30",
+      "rank": 27,
+      "route_type": "mixed",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "from": "東京", "to": "京都", "dep": "08:12", "arr": "10:24", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "奈良方面アクセス", "from": "京都", "to": "奈良県庁", "dep": "10:35", "arr": "11:30"}
+      ],
+      "status_events": [{"time": "11:30", "label": "奈良県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "和歌山県",
+      "name": "和歌山県庁",
+      "lat": 34.225986,
+      "lng": 135.167509,
+      "duration_minutes": 250,
+      "arrival_label": "12:10",
+      "rank": 32,
+      "route_type": "mixed",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道新幹線", "from": "東京", "to": "新大阪", "dep": "08:12", "arr": "10:39", "visual_path_id": "shinkansen_tokaido_tokyo_shinosaka"},
+        {"type": "local", "line": "紀州方面アクセス", "from": "新大阪", "to": "和歌山県庁", "dep": "10:50", "arr": "12:10"}
+      ],
+      "status_events": [
+        {"time": "11:40", "label": "和歌山県 まだ移動中", "priority": 3},
+        {"time": "12:10", "label": "和歌山県庁 着弾", "priority": 1}
+      ]
+    },
+    {
+      "prefecture": "鳥取県",
+      "name": "鳥取県庁",
+      "lat": 35.503867,
+      "lng": 134.238327,
+      "duration_minutes": 245,
+      "arrival_label": "12:05",
+      "rank": 30,
+      "route_type": "air",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:20", "arr": "08:40", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:40", "arr": "09:35"},
+        {"type": "air", "line": "羽田→鳥取", "from": "羽田空港", "to": "鳥取空港", "dep": "09:35", "arr": "10:55", "visual_path_id": "air_hnd_ttj"},
+        {"type": "local", "line": "鳥取市内アクセス", "from": "鳥取空港", "to": "鳥取県庁", "dep": "11:05", "arr": "12:05"}
+      ],
+      "status_events": [{"time": "12:05", "label": "鳥取県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "島根県",
+      "name": "島根県庁",
+      "lat": 35.472295,
+      "lng": 133.050499,
+      "duration_minutes": 285,
+      "arrival_label": "12:45",
+      "rank": 37,
+      "route_type": "air",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:20", "arr": "08:40", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:40", "arr": "09:45"},
+        {"type": "air", "line": "羽田→出雲", "from": "羽田空港", "to": "出雲空港", "dep": "09:45", "arr": "11:10", "visual_path_id": "air_hnd_izo"},
+        {"type": "local", "line": "松江方面アクセス", "from": "出雲空港", "to": "島根県庁", "dep": "11:20", "arr": "12:45"}
+      ],
+      "status_events": [{"time": "12:45", "label": "島根県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "岡山県",
+      "name": "岡山県庁",
+      "lat": 34.661739,
+      "lng": 133.935032,
+      "duration_minutes": 230,
+      "arrival_label": "11:50",
+      "rank": 29,
+      "route_type": "shinkansen",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道・山陽新幹線", "from": "東京", "to": "岡山", "dep": "08:12", "arr": "11:20", "visual_path_id": "shinkansen_sanyo_shinosaka_hakata"},
+        {"type": "local", "line": "岡山市内アクセス", "from": "岡山", "to": "岡山県庁", "dep": "11:25", "arr": "11:50"}
+      ],
+      "status_events": [{"time": "11:50", "label": "岡山県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "広島県",
+      "name": "広島県庁",
+      "lat": 34.396559,
+      "lng": 132.459646,
+      "duration_minutes": 265,
+      "arrival_label": "12:25",
+      "rank": 34,
+      "route_type": "shinkansen",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "shinkansen", "mode": "superexpress_train", "line": "東海道・山陽新幹線", "from": "東京", "to": "広島", "dep": "08:12", "arr": "12:00", "visual_path_id": "shinkansen_sanyo_shinosaka_hakata"},
+        {"type": "local", "line": "広島市内アクセス", "from": "広島", "to": "広島県庁", "dep": "12:05", "arr": "12:25"}
+      ],
+      "status_events": [{"time": "12:25", "label": "広島県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "山口県",
+      "name": "山口県庁",
+      "lat": 34.185956,
+      "lng": 131.470649,
+      "duration_minutes": 315,
+      "arrival_label": "13:15",
+      "rank": 41,
+      "route_type": "air",
+      "time_bucket": "within_8h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:20", "arr": "08:40", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:40", "arr": "09:55"},
+        {"type": "air", "line": "羽田→山口宇部", "from": "羽田空港", "to": "山口宇部空港", "dep": "09:55", "arr": "11:30"},
+        {"type": "local", "line": "山口方面アクセス", "from": "山口宇部空港", "to": "山口県庁", "dep": "11:45", "arr": "13:15"}
+      ],
+      "status_events": [{"time": "13:15", "label": "山口県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "徳島県",
+      "name": "徳島県庁",
+      "lat": 34.065756,
+      "lng": 134.559297,
+      "duration_minutes": 275,
+      "arrival_label": "12:35",
+      "rank": 36,
+      "route_type": "air",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:20", "arr": "08:40", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:40", "arr": "10:00"},
+        {"type": "air", "line": "羽田→徳島", "from": "羽田空港", "to": "徳島空港", "dep": "10:00", "arr": "11:15"},
+        {"type": "local", "line": "徳島市内アクセス", "from": "徳島空港", "to": "徳島県庁", "dep": "11:25", "arr": "12:35"}
+      ],
+      "status_events": [{"time": "12:35", "label": "徳島県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "香川県",
+      "name": "香川県庁",
+      "lat": 34.340112,
+      "lng": 134.043291,
+      "duration_minutes": 255,
+      "arrival_label": "12:15",
+      "rank": 33,
+      "route_type": "air",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:20", "arr": "08:40", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:40", "arr": "09:50"},
+        {"type": "air", "line": "羽田→高松", "from": "羽田空港", "to": "高松空港", "dep": "09:50", "arr": "11:10", "visual_path_id": "air_hnd_tak"},
+        {"type": "local", "line": "高松市内アクセス", "from": "高松空港", "to": "香川県庁", "dep": "11:20", "arr": "12:15"}
+      ],
+      "status_events": [{"time": "12:15", "label": "香川県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "愛媛県",
+      "name": "愛媛県庁",
+      "lat": 33.84166,
+      "lng": 132.765362,
+      "duration_minutes": 285,
+      "arrival_label": "12:45",
+      "rank": 38,
+      "route_type": "air",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:20", "arr": "08:40", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:40", "arr": "09:55"},
+        {"type": "air", "line": "羽田→松山", "from": "羽田空港", "to": "松山空港", "dep": "09:55", "arr": "11:25", "visual_path_id": "air_hnd_myj"},
+        {"type": "local", "line": "松山市内アクセス", "from": "松山空港", "to": "愛媛県庁", "dep": "11:35", "arr": "12:45"}
+      ],
+      "status_events": [{"time": "12:45", "label": "愛媛県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "高知県",
+      "name": "高知県庁",
+      "lat": 33.559706,
+      "lng": 133.531079,
+      "duration_minutes": 325,
+      "arrival_label": "13:25",
+      "rank": 43,
+      "route_type": "air",
+      "time_bucket": "within_8h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:20", "arr": "08:40", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:40", "arr": "10:25"},
+        {"type": "air", "line": "羽田→高知", "from": "羽田空港", "to": "高知空港", "dep": "10:25", "arr": "11:50", "visual_path_id": "air_hnd_kcz"},
+        {"type": "local", "line": "高知市内アクセス", "from": "高知空港", "to": "高知県庁", "dep": "12:05", "arr": "13:25"}
+      ],
+      "status_events": [
+        {"time": "10:00", "label": "高知県 羽田で待機長め", "priority": 3},
+        {"time": "13:25", "label": "高知県庁 着弾", "priority": 1}
+      ]
+    },
+    {
+      "prefecture": "福岡県",
+      "name": "福岡県庁",
+      "lat": 33.606389,
+      "lng": 130.418056,
+      "duration_minutes": 221,
+      "arrival_label": "11:41",
+      "rank": 28,
+      "route_type": "air",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "local_train", "line": "JR京浜東北線", "from": "東京", "to": "浜松町", "dep": "08:07", "arr": "08:11", "visual_path_id": "jr_keihin_tohoku_tokyo_hamamatsucho"},
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:21", "arr": "08:39", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:39", "arr": "09:22"},
+        {"type": "air", "line": "羽田→福岡", "from": "羽田空港", "to": "福岡空港", "dep": "09:22", "arr": "11:02", "visual_path_id": "air_hnd_fuk"},
+        {"type": "local", "line": "福岡市営地下鉄", "from": "福岡空港", "to": "福岡県庁", "dep": "11:14", "arr": "11:41"}
+      ],
+      "status_events": [
+        {"time": "08:39", "label": "福岡県 羽田待機", "priority": 2},
+        {"time": "09:22", "label": "福岡県 福岡へ飛行中", "priority": 3},
+        {"time": "11:41", "label": "福岡県庁 着弾", "priority": 1}
+      ]
+    },
+    {
+      "prefecture": "佐賀県",
+      "name": "佐賀県庁",
+      "lat": 33.249441,
+      "lng": 130.299794,
+      "duration_minutes": 305,
+      "arrival_label": "13:05",
+      "rank": 40,
+      "route_type": "air",
+      "time_bucket": "within_8h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:21", "arr": "08:39", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:39", "arr": "10:05"},
+        {"type": "air", "line": "羽田→佐賀", "from": "羽田空港", "to": "佐賀空港", "dep": "10:05", "arr": "12:05", "visual_path_id": "air_hnd_hsg"},
+        {"type": "local", "line": "佐賀市内アクセス", "from": "佐賀空港", "to": "佐賀県庁", "dep": "12:20", "arr": "13:05"}
+      ],
+      "status_events": [
+        {"time": "09:30", "label": "佐賀県 羽田で便待ち", "priority": 3},
+        {"time": "13:05", "label": "佐賀県庁 着弾", "priority": 1}
+      ]
+    },
+    {
+      "prefecture": "長崎県",
+      "name": "長崎県庁",
+      "lat": 32.744839,
+      "lng": 129.873756,
+      "duration_minutes": 330,
+      "arrival_label": "13:30",
+      "rank": 44,
+      "route_type": "air",
+      "time_bucket": "within_8h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:21", "arr": "08:39", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:39", "arr": "09:55"},
+        {"type": "air", "line": "羽田→長崎", "from": "羽田空港", "to": "長崎空港", "dep": "09:55", "arr": "11:55", "visual_path_id": "air_hnd_ngs"},
+        {"type": "local", "line": "長崎市内アクセス", "from": "長崎空港", "to": "長崎県庁", "dep": "12:10", "arr": "13:30"}
+      ],
+      "status_events": [{"time": "13:30", "label": "長崎県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "熊本県",
+      "name": "熊本県庁",
+      "lat": 32.789827,
+      "lng": 130.741667,
+      "duration_minutes": 300,
+      "arrival_label": "13:00",
+      "rank": 39,
+      "route_type": "air",
+      "time_bucket": "within_5h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:21", "arr": "08:39", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:39", "arr": "09:45"},
+        {"type": "air", "line": "羽田→熊本", "from": "羽田空港", "to": "熊本空港", "dep": "09:45", "arr": "11:40", "visual_path_id": "air_hnd_kmj"},
+        {"type": "local", "line": "熊本市内アクセス", "from": "熊本空港", "to": "熊本県庁", "dep": "11:55", "arr": "13:00"}
+      ],
+      "status_events": [{"time": "13:00", "label": "熊本県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "大分県",
+      "name": "大分県庁",
+      "lat": 33.238194,
+      "lng": 131.612591,
+      "duration_minutes": 320,
+      "arrival_label": "13:20",
+      "rank": 42,
+      "route_type": "air",
+      "time_bucket": "within_8h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:21", "arr": "08:39", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:39", "arr": "10:15"},
+        {"type": "air", "line": "羽田→大分", "from": "羽田空港", "to": "大分空港", "dep": "10:15", "arr": "11:55"},
+        {"type": "local", "line": "大分市内アクセス", "from": "大分空港", "to": "大分県庁", "dep": "12:10", "arr": "13:20"}
+      ],
+      "status_events": [{"time": "13:20", "label": "大分県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "宮崎県",
+      "name": "宮崎県庁",
+      "lat": 31.91109,
+      "lng": 131.423855,
+      "duration_minutes": 345,
+      "arrival_label": "13:45",
+      "rank": 45,
+      "route_type": "air",
+      "time_bucket": "within_8h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:21", "arr": "08:39", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:39", "arr": "10:05"},
+        {"type": "air", "line": "羽田→宮崎", "from": "羽田空港", "to": "宮崎空港", "dep": "10:05", "arr": "12:05", "visual_path_id": "air_hnd_kmi"},
+        {"type": "local", "line": "宮崎市内アクセス", "from": "宮崎空港", "to": "宮崎県庁", "dep": "12:20", "arr": "13:45"}
+      ],
+      "status_events": [{"time": "13:45", "label": "宮崎県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "鹿児島県",
+      "name": "鹿児島県庁",
+      "lat": 31.560219,
+      "lng": 130.558175,
+      "duration_minutes": 315,
+      "arrival_label": "13:15",
+      "rank": 41,
+      "route_type": "air",
+      "time_bucket": "within_8h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:21", "arr": "08:39", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:39", "arr": "09:50"},
+        {"type": "air", "line": "羽田→鹿児島", "from": "羽田空港", "to": "鹿児島空港", "dep": "09:50", "arr": "11:50", "visual_path_id": "air_hnd_koj"},
+        {"type": "local", "line": "鹿児島市内アクセス", "from": "鹿児島空港", "to": "鹿児島県庁", "dep": "12:05", "arr": "13:15"}
+      ],
+      "status_events": [{"time": "13:15", "label": "鹿児島県庁 着弾", "priority": 1}]
+    },
+    {
+      "prefecture": "沖縄県",
+      "name": "沖縄県庁",
+      "lat": 26.212312,
+      "lng": 127.681091,
+      "duration_minutes": 390,
+      "arrival_label": "14:30",
+      "rank": 47,
+      "route_type": "air",
+      "time_bucket": "within_8h",
+      "source_quality": "handmade_internal_demo",
+      "legs": [
+        {"type": "rail", "mode": "airport_access", "line": "東京モノレール", "from": "浜松町", "to": "羽田空港", "dep": "08:21", "arr": "08:39", "visual_path_id": "tokyo_monorail_hamamatsucho_haneda"},
+        {"type": "wait", "at": "羽田空港", "dep": "08:39", "arr": "09:40"},
+        {"type": "air", "line": "羽田→那覇", "from": "羽田空港", "to": "那覇空港", "dep": "09:40", "arr": "12:35", "visual_path_id": "air_hnd_oka"},
+        {"type": "local", "line": "ゆいレール/那覇市内アクセス", "from": "那覇空港", "to": "沖縄県庁", "dep": "12:50", "arr": "14:30"}
+      ],
+      "status_events": [
+        {"time": "09:40", "label": "沖縄県 那覇へ離陸", "priority": 3},
+        {"time": "14:30", "label": "沖縄県庁 ラスト着弾", "priority": 1}
+      ]
+    }
+  ]
+}
